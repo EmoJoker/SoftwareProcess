@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DatabaseBackendModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Planning">
+    <Key>
+      <PropertyRef Name="PlanID" />
+    </Key>
+    <Property Name="PlanID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="User_ID" Type="Int32" />
+    <Property Name="Course_Code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+    <Property Name="Semester" Type="Int32" />
+    <Property Name="Grade" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Subject" Relationship="Self.fk_coursecode" FromRole="Planning" ToRole="Subjects" />
+    <NavigationProperty Name="User" Relationship="Self.fk_User_ID" FromRole="Planning" ToRole="Users" />
+  </EntityType>
+  <EntityType Name="Subject">
+    <Key>
+      <PropertyRef Name="Course_Code" />
+    </Key>
+    <Property Name="Course_Code" Type="String" MaxLength="10" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Course_Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Course_Year" Type="Int32" />
+    <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="Course_Topic" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Pre_Req" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Compulsory" Type="Boolean" />
+    <NavigationProperty Name="Plannings" Relationship="Self.fk_coursecode" FromRole="Subjects" ToRole="Planning" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="User_ID" />
+    </Key>
+    <Property Name="User_ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="First_Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Last_Name" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Age" Type="Int32" />
+    <Property Name="Contact_Number" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Email_Address" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <NavigationProperty Name="Plannings" Relationship="Self.fk_User_ID" FromRole="Users" ToRole="Planning" />
+  </EntityType>
+  <Association Name="fk_coursecode">
+    <End Role="Subjects" Type="Self.Subject" Multiplicity="0..1" />
+    <End Role="Planning" Type="Self.Planning" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subjects">
+        <PropertyRef Name="Course_Code" />
+      </Principal>
+      <Dependent Role="Planning">
+        <PropertyRef Name="Course_Code" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_User_ID">
+    <End Role="Users" Type="Self.User" Multiplicity="0..1" />
+    <End Role="Planning" Type="Self.Planning" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="User_ID" />
+      </Principal>
+      <Dependent Role="Planning">
+        <PropertyRef Name="User_ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DatabaseBackendEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Plannings" EntityType="Self.Planning" />
+    <EntitySet Name="Subjects" EntityType="Self.Subject" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <AssociationSet Name="fk_coursecode" Association="Self.fk_coursecode">
+      <End Role="Subjects" EntitySet="Subjects" />
+      <End Role="Planning" EntitySet="Plannings" />
+    </AssociationSet>
+    <AssociationSet Name="fk_User_ID" Association="Self.fk_User_ID">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Planning" EntitySet="Plannings" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

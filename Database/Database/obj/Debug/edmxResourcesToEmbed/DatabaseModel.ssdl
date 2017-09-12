@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="DatabaseBackendModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="Planning">
+    <Key>
+      <PropertyRef Name="PlanID" />
+    </Key>
+    <Property Name="PlanID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="User ID" Type="int" />
+    <Property Name="Course Code" Type="varchar" MaxLength="10" />
+    <Property Name="Semester" Type="int" />
+    <Property Name="Grade" Type="varchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="Subjects">
+    <Key>
+      <PropertyRef Name="Course Code" />
+    </Key>
+    <Property Name="Course Code" Type="varchar" MaxLength="10" Nullable="false" />
+    <Property Name="Course Name" Type="varchar" MaxLength="20" />
+    <Property Name="Course Year" Type="int" />
+    <Property Name="Description" Type="varchar(max)" />
+    <Property Name="Course Topic" Type="varchar" MaxLength="20" />
+    <Property Name="Pre Req" Type="varchar" MaxLength="20" />
+    <Property Name="Compulsory" Type="bit" />
+  </EntityType>
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="User ID" />
+    </Key>
+    <Property Name="User ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="First Name" Type="varchar" MaxLength="20" />
+    <Property Name="Last Name" Type="varchar" MaxLength="20" />
+    <Property Name="Age" Type="int" />
+    <Property Name="Contact Number" Type="varchar" MaxLength="20" />
+    <Property Name="Email Address" Type="varchar" MaxLength="20" />
+  </EntityType>
+  <Association Name="fk_coursecode">
+    <End Role="Subjects" Type="Self.Subjects" Multiplicity="0..1" />
+    <End Role="Planning" Type="Self.Planning" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subjects">
+        <PropertyRef Name="Course Code" />
+      </Principal>
+      <Dependent Role="Planning">
+        <PropertyRef Name="Course Code" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="fk_User ID">
+    <End Role="Users" Type="Self.Users" Multiplicity="0..1" />
+    <End Role="Planning" Type="Self.Planning" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Users">
+        <PropertyRef Name="User ID" />
+      </Principal>
+      <Dependent Role="Planning">
+        <PropertyRef Name="User ID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="DatabaseBackendModelStoreContainer">
+    <EntitySet Name="Planning" EntityType="Self.Planning" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Subjects" EntityType="Self.Subjects" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" Schema="dbo" store:Type="Tables" />
+    <AssociationSet Name="fk_coursecode" Association="Self.fk_coursecode">
+      <End Role="Subjects" EntitySet="Subjects" />
+      <End Role="Planning" EntitySet="Planning" />
+    </AssociationSet>
+    <AssociationSet Name="fk_User ID" Association="Self.fk_User ID">
+      <End Role="Users" EntitySet="Users" />
+      <End Role="Planning" EntitySet="Planning" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
